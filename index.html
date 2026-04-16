@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classic Snake</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="panel">
+        <header class="header">
+          <div>
+            <p class="eyebrow">Arcade</p>
+            <h1>Snake</h1>
+          </div>
+          <div class="scoreboard">
+            <span>Score</span>
+            <strong id="score">0</strong>
+          </div>
+        </header>
+
+        <div id="status" class="status">Use arrow keys or WASD to start moving.</div>
+        <div id="board" class="board" aria-label="Snake board" role="grid"></div>
+
+        <div class="actions">
+          <button id="pauseButton" type="button">Pause</button>
+          <button id="restartButton" type="button">Restart</button>
+          <button id="autoPlayButton" type="button">Auto Off</button>
+        </div>
+
+        <div id="autoStatus" class="meta">Auto: Off</div>
+
+        <div class="controls" aria-label="Touch controls">
+          <button data-direction="up" type="button">Up</button>
+          <div class="controls-row">
+            <button data-direction="left" type="button">Left</button>
+            <button data-direction="down" type="button">Down</button>
+            <button data-direction="right" type="button">Right</button>
+          </div>
+        </div>
+
+        <p class="help">
+          Arrow keys/WASD move. Space pauses. Enter restarts after game over.
+        </p>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
