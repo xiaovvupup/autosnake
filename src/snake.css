@@ -1,0 +1,42 @@
+.snake-board-shell {
+  max-width: 720px;
+}
+
+.board {
+  --cols: 16;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 4px;
+  aspect-ratio: 1;
+}
+
+.cell {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(124, 171, 214, 0.08);
+}
+
+.snake-head {
+  background: linear-gradient(180deg, #8effc2, #3edb85);
+  box-shadow:
+    0 0 12px rgba(110, 255, 180, 0.26),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.snake-body {
+  background: linear-gradient(180deg, #5ed08c, #2b9158);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.food {
+  background: linear-gradient(180deg, #ffaf8a, #ff6b6b);
+  box-shadow: 0 0 14px rgba(255, 131, 131, 0.28);
+}
+
+.controls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.controls .wide {
+  grid-column: span 2;
+}

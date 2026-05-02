@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自动贪吃蛇</title>
+    <link rel="stylesheet" href="./src/arcade.css" />
+    <link rel="stylesheet" href="./src/snake.css" />
+  </head>
+  <body>
+    <main class="arcade-app">
+      <section class="arcade-shell">
+        <header class="arcade-hero">
+          <p class="eyebrow">Neon Arcade</p>
+          <h1>Auto Snake</h1>
+          <p class="lead">自动寻路、自动避险，也支持你切到手动模式自己接管路线。</p>
+        </header>
+
+        <section class="arcade-layout">
+          <section class="panel stage-panel">
+            <div class="panel-head">
+              <div>
+                <p>AI 贪吃蛇巡航</p>
+                <h2>自动觅食中</h2>
+              </div>
+              <div class="stat">
+                <span>当前得分</span>
+                <strong id="score">0</strong>
+              </div>
+            </div>
+
+            <p id="status" class="status">自动巡航准备完成，会在下一拍开始觅食。</p>
+            <div class="board-shell snake-board-shell">
+              <div id="board" class="board" aria-label="贪吃蛇棋盘" role="grid"></div>
+            </div>
+          </section>
+
+          <aside class="panel side-panel">
+            <section class="stat-grid">
+              <div class="stat">
+                <span>蛇身长度</span>
+                <strong id="length">3</strong>
+              </div>
+              <div class="stat">
+                <span>自动状态</span>
+                <strong id="autoStatus">AI 巡航开启</strong>
+              </div>
+            </section>
+
+            <div class="actions">
+              <button id="pauseButton" type="button">暂停</button>
+              <button id="restartButton" type="button">重开</button>
+              <button id="autoPlayButton" class="wide" type="button">自动巡航：开</button>
+            </div>
+
+            <section class="card">
+              <p class="card-label">Strategy</p>
+              <p id="strategy" class="strategy">策略：优先走安全路、追食物，同时尽量避免形成短循环和死胡同。</p>
+            </section>
+
+            <div class="controls" aria-label="触控方向键">
+              <button data-direction="up" class="wide" type="button">上</button>
+              <button data-direction="left" type="button">左</button>
+              <button data-direction="down" type="button">下</button>
+              <button data-direction="right" class="wide" type="button">右</button>
+            </div>
+
+            <p class="help">方向键/WASD 控制，空格暂停，回车重开。</p>
+            <a class="button-link" href="./index.html">返回小游戏首页</a>
+          </aside>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="./src/snake-main.js"></script>
+  </body>
+</html>

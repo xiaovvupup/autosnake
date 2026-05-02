@@ -2,259 +2,111 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
-  advanceGame,
+  canPlacePiece,
+  clearCompleteLines,
   createInitialState,
-  isDirectionAllowed,
-  placeFood,
-  restartGame,
-  setDirection,
+  createPiece,
+  hardDrop,
+  movePiece,
+  rotatePiece,
+  softDrop,
   stepGame
 } from "../src/game.js";
 import {
-  buildOccupancyGrid,
-  chooseSafeMove,
+  chooseAutoMove,
   createAutoPlayState,
-  detectLoopRisk,
-  findShortestPath,
-  hasPathToTail,
-  simulatePath
+  findBestPlacement
 } from "../src/auto-play.js";
 
-test("snake moves one cell in the current direction", () => {
-  const state = createInitialState({ cols: 10, rows: 10, rng: () => 0 });
-  const next = stepGame({ ...state, status: "running" });
+test("initial state creates a live piece and three preview pieces", () => {
+  const state = createInitialState({ cols: 10, rows: 20, rng: () => 0 });
 
-  assert.deepEqual(next.snake[0], { x: state.snake[0].x + 1, y: state.snake[0].y });
-  assert.equal(next.snake.length, state.snake.length);
+  assert.ok(state.current);
+  assert.equal(state.queue.length, 3);
+  assert.equal(state.status, "ready");
 });
 
-test("snake grows and score increases after eating food", () => {
+test("soft drop moves the current piece down one row", () => {
+  const state = createInitialState({ cols: 10, rows: 20, rng: () => 0 });
+  const next = softDrop(state);
+
+  assert.equal(next.current.y, state.current.y + 1);
+  assert.equal(next.status, "running");
+});
+
+test("rotation keeps the piece playable with simple wall kicks", () => {
   const state = {
-    ...createInitialState({ cols: 8, rows: 8, rng: () => 0.5 }),
-    status: "running",
-    food: { x: 5, y: 4 },
-    snake: [
-      { x: 4, y: 4 },
-      { x: 3, y: 4 },
-      { x: 2, y: 4 }
-    ]
-  };
-
-  const next = stepGame(state, () => 0);
-
-  assert.equal(next.score, 1);
-  assert.equal(next.snake.length, 4);
-  assert.deepEqual(next.snake[0], { x: 5, y: 4 });
-  assert.notDeepEqual(next.food, state.food);
-});
-
-test("reverse direction input is ignored", () => {
-  const state = createInitialState({ cols: 10, rows: 10, rng: () => 0 });
-  const next = setDirection(state, "left");
-
-  assert.equal(next.pendingDirection, "right");
-});
-
-test("wall collisions end the game", () => {
-  const state = {
-    ...createInitialState({ cols: 4, rows: 4, rng: () => 0 }),
-    status: "running",
-    snake: [
-      { x: 3, y: 1 },
-      { x: 2, y: 1 },
-      { x: 1, y: 1 }
-    ],
-    direction: "right",
-    pendingDirection: "right"
-  };
-
-  const next = stepGame(state);
-  assert.equal(next.status, "game-over");
-});
-
-test("self collisions end the game", () => {
-  const state = {
-    ...createInitialState({ cols: 6, rows: 6, rng: () => 0 }),
-    status: "running",
-    snake: [
-      { x: 2, y: 2 },
-      { x: 3, y: 2 },
-      { x: 3, y: 3 },
-      { x: 2, y: 3 },
-      { x: 1, y: 3 },
-      { x: 1, y: 2 }
-    ],
-    direction: "down",
-    pendingDirection: "down",
-    food: { x: 5, y: 5 }
-  };
-
-  const next = stepGame(state);
-  assert.equal(next.status, "game-over");
-});
-
-test("food placement skips occupied cells deterministically", () => {
-  const food = placeFood(
-    [
-      { x: 0, y: 0 },
-      { x: 1, y: 0 },
-      { x: 2, y: 0 }
-    ],
-    3,
-    3,
-    () => 0
-  );
-
-  assert.deepEqual(food, { x: 0, y: 1 });
-});
-
-test("shortest path selection finds a direct route to food", () => {
-  const state = {
-    ...createInitialState({ cols: 5, rows: 5, rng: () => 0 }),
-    status: "running",
-    snake: [
-      { x: 1, y: 1 },
-      { x: 0, y: 1 },
-      { x: 0, y: 0 }
-    ],
-    direction: "right",
-    pendingDirection: "right",
-    food: { x: 3, y: 1 }
-  };
-
-  const path = findShortestPath({
-    cols: state.cols,
-    rows: state.rows,
-    start: state.snake[0],
-    target: state.food,
-    blocked: buildOccupancyGrid(state, { ignoreHead: true, ignoreTail: true }),
-    preferredDirections: ["right"]
-  });
-
-  assert.deepEqual(path, ["right", "right"]);
-  assert.equal(chooseSafeMove(state, createAutoPlayState(state)), "right");
-});
-
-test("unsafe food path is rejected in favor of a survivable move", () => {
-  const state = {
-    cols: 5,
-    rows: 5,
-    snake: [
-      { x: 1, y: 1 },
-      { x: 0, y: 1 },
-      { x: 0, y: 2 },
-      { x: 1, y: 2 },
-      { x: 2, y: 2 },
-      { x: 2, y: 1 },
-      { x: 2, y: 0 },
-      { x: 1, y: 0 }
-    ],
-    direction: "right",
-    pendingDirection: "right",
-    food: { x: 0, y: 0 },
-    score: 0,
+    ...createInitialState({ cols: 10, rows: 20, rng: () => 0 }),
+    current: createPiece("L", 0, 0, 0),
     status: "running"
   };
 
-  const blocked = buildOccupancyGrid(state, { ignoreHead: true, ignoreTail: true });
-  const path = findShortestPath({
-    cols: state.cols,
-    rows: state.rows,
-    start: state.snake[0],
-    target: state.food,
-    blocked,
-    preferredDirections: ["up", "left", "right"]
-  });
-  const simulated = simulatePath(state, path);
-  const direction = chooseSafeMove(state, createAutoPlayState(state));
-  const next = advanceGame(state, direction, () => 0);
+  const rotated = rotatePiece(state, 1);
 
-  assert.deepEqual(path, ["up", "left"]);
-  assert.equal(hasPathToTail(simulated), false);
-  assert.equal(direction, "up");
-  assert.equal(next.status, "running");
-  assert.equal(hasPathToTail(next), true);
+  assert.equal(canPlacePiece(rotated.board, rotated.current, rotated.cols, rotated.rows), true);
 });
 
-test("fallback chooses a safe move when no usable food route is available", () => {
-  const blockedPath = findShortestPath({
-    cols: 4,
-    rows: 4,
-    start: { x: 0, y: 1 },
-    target: { x: 3, y: 1 },
-    blocked: new Set(["1,0", "1,1", "1,2", "1,3", "2,0", "2,1", "2,2", "2,3"]),
-    preferredDirections: ["right"]
-  });
+test("hard drop locks a piece, clears a line, and awards score", () => {
   const state = {
-    cols: 4,
-    rows: 4,
-    snake: [
-      { x: 1, y: 1 },
-      { x: 1, y: 2 },
-      { x: 0, y: 2 },
-      { x: 0, y: 1 }
-    ],
-    direction: "up",
-    pendingDirection: "up",
-    food: null,
-    score: 0,
+    ...createInitialState({ cols: 10, rows: 20, rng: () => 0 }),
+    board: Array.from({ length: 20 }, (_, row) =>
+      row === 19
+        ? [null, null, null, null, "O", "O", "O", "O", "O", "O"]
+        : Array(10).fill(null)
+    ),
+    current: createPiece("I", 0, 0, 18),
+    queue: ["T", "S", "Z"],
+    bag: ["J", "L", "O"],
     status: "running"
   };
 
-  const direction = chooseSafeMove(state, createAutoPlayState(state));
-  const next = advanceGame(state, direction, () => 0);
+  const next = hardDrop(state, () => 0);
 
-  assert.equal(blockedPath, null);
-  assert.equal(["up", "right", "left"].includes(direction), true);
-  assert.equal(next.status, "running");
-  assert.equal(hasPathToTail(next), true);
+  assert.equal(next.lines, 1);
+  assert.equal(next.score, 100);
+  assert.equal(next.piecesPlaced, 1);
+  assert.equal(next.board[19].every((cell) => cell === null), true);
 });
 
-test("loop-risk detection penalizes short repeated cycles", () => {
-  const autoState = {
-    recentHeads: ["1,1", "2,1", "1,1", "2,1", "1,1", "2,1"],
-    recentDirections: ["right", "left", "right", "left", "right"],
-    stepsSinceFood: 8,
-    lastFoodDistance: 2
-  };
-  const loopyState = {
-    ...createInitialState({ cols: 5, rows: 5, rng: () => 0 }),
-    snake: [
-      { x: 2, y: 1 },
-      { x: 2, y: 2 },
-      { x: 1, y: 2 }
-    ],
-    food: { x: 4, y: 4 }
-  };
-  const freshState = {
-    ...loopyState,
-    snake: [
-      { x: 3, y: 1 },
-      { x: 2, y: 1 },
-      { x: 2, y: 2 }
-    ]
-  };
+test("clearing lines inserts empty rows back at the top", () => {
+  const board = [
+    ["I", "I", "I", "I"],
+    [null, null, null, null],
+    ["O", "O", "O", "O"],
+    [null, "T", null, null]
+  ];
 
-  assert.ok(detectLoopRisk(autoState, loopyState, "left") > detectLoopRisk(autoState, freshState, "right"));
+  const cleared = clearCompleteLines(board, 4);
+
+  assert.equal(cleared.cleared, 2);
+  assert.deepEqual(cleared.board[0], [null, null, null, null]);
+  assert.deepEqual(cleared.board[1], [null, null, null, null]);
 });
 
-test("restart resets auto-play state cleanly", () => {
-  const initial = createInitialState({ cols: 6, rows: 6, rng: () => 0 });
-  const turned = setDirection(initial, "down");
-  const moved = stepGame(turned);
-  const autoState = createAutoPlayState(moved);
-  const updatedAutoState = {
-    ...autoState,
-    recentHeads: [...autoState.recentHeads, "9,9"],
-    recentDirections: ["down", "down"],
-    stepsSinceFood: 5,
-    lastFoodDistance: 12
+test("auto-play finds the line-clearing horizontal placement", () => {
+  const state = {
+    ...createInitialState({ cols: 10, rows: 20, rng: () => 0 }),
+    board: Array.from({ length: 20 }, (_, row) =>
+      row === 19
+        ? [null, null, null, null, "O", "O", "O", "O", "O", "O"]
+        : Array(10).fill(null)
+    ),
+    current: createPiece("I", 0, 3, 0),
+    status: "running"
   };
-  const restarted = restartGame(moved, () => 0);
-  const resetAutoState = createAutoPlayState(restarted);
 
-  assert.equal(isDirectionAllowed(restarted, "left"), false);
-  assert.equal(updatedAutoState.stepsSinceFood > resetAutoState.stepsSinceFood, true);
-  assert.deepEqual(resetAutoState.recentHeads, [`${restarted.snake[0].x},${restarted.snake[0].y}`]);
-  assert.deepEqual(resetAutoState.recentDirections, []);
+  const plan = findBestPlacement(state);
+
+  assert.ok(plan);
+  assert.equal(plan.cleared, 1);
+  assert.equal(Math.abs(plan.x), 0);
+});
+
+test("auto-play decision metadata records the latest plan", () => {
+  const state = createInitialState({ cols: 10, rows: 20, rng: () => 0 });
+  const decision = chooseAutoMove(state, createAutoPlayState());
+
+  assert.ok(decision.plan);
+  assert.equal(decision.autoState.decisions, 1);
+  assert.deepEqual(decision.autoState.lastPlan, decision.plan);
 });

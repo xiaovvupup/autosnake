@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自动打砖块</title>
+    <link rel="stylesheet" href="./src/arcade.css" />
+  </head>
+  <body>
+    <main class="arcade-app">
+      <section class="arcade-shell">
+        <header class="arcade-hero">
+          <p class="eyebrow">Reflex Arcade</p>
+          <h1>Auto Brick Breaker</h1>
+          <p class="lead">挡板会自动预测小球落点，持续把球托回砖墙里，把整面墙慢慢拆空。</p>
+        </header>
+
+        <section class="arcade-layout">
+          <section class="panel stage-panel">
+            <div class="panel-head">
+              <div>
+                <p>AI 挡板挑战赛</p>
+                <h2>自动回球中</h2>
+              </div>
+              <div class="stat">
+                <span>当前得分</span>
+                <strong id="score">0</strong>
+              </div>
+            </div>
+
+            <p id="status" class="status">自动挡板已经就位，砖墙马上开拆。</p>
+            <div class="board-shell">
+              <canvas id="board" class="canvas-board" aria-label="打砖块画布"></canvas>
+            </div>
+          </section>
+
+          <aside class="panel side-panel">
+            <section class="stat-grid">
+              <div class="stat">
+                <span>剩余生命</span>
+                <strong id="lives">3</strong>
+              </div>
+              <div class="stat">
+                <span>清除进度</span>
+                <strong id="cleared">0/60</strong>
+              </div>
+              <div class="stat">
+                <span>自动状态</span>
+                <strong id="autoStatus">AI 预测落点中</strong>
+              </div>
+              <div class="stat">
+                <span>目标</span>
+                <strong>清空砖墙</strong>
+              </div>
+            </section>
+
+            <div class="actions">
+              <button id="pauseButton" type="button">暂停</button>
+              <button id="restartButton" type="button">重开</button>
+              <button id="autoButton" class="wide" type="button">自动挡板：开</button>
+            </div>
+
+            <section class="card">
+              <p class="card-label">Strategy</p>
+              <p id="strategy" class="strategy">策略：预测小球落点后提前移动挡板，尽量把球重新送回密集砖区。</p>
+            </section>
+
+            <p class="help">关闭自动后可用左右方向键手动移动挡板，空格暂停。</p>
+            <a class="button-link" href="./index.html">返回小游戏首页</a>
+          </aside>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main-brick-breaker.js"></script>
+  </body>
+</html>

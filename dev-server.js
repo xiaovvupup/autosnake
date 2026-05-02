@@ -36,5 +36,5 @@ createServer((request, response) => {
 
   createReadStream(filePath).pipe(response);
 }).listen(port, host, () => {
-  console.log(`Snake game available at http://${host}:${port}`);
+  console.log(`Mini arcade available at http://${host}:${port}`);
 });

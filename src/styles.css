@@ -1,8 +1,21 @@
 :root {
-  color-scheme: light;
-  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-  background: #f4efe6;
-  color: #1f1f1f;
+  color-scheme: dark;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  --bg-0: #07111f;
+  --bg-1: #0e1f34;
+  --bg-2: #1d1035;
+  --panel: rgba(8, 19, 35, 0.8);
+  --panel-border: rgba(173, 230, 255, 0.18);
+  --text: #ecf7ff;
+  --muted: #9db9d7;
+  --accent: #7cf8cf;
+  --piece-i: linear-gradient(180deg, #8af7ff 0%, #31d1ff 100%);
+  --piece-o: linear-gradient(180deg, #ffe27c 0%, #ffbb33 100%);
+  --piece-t: linear-gradient(180deg, #ff8bf4 0%, #d457ff 100%);
+  --piece-s: linear-gradient(180deg, #8affb8 0%, #34d97a 100%);
+  --piece-z: linear-gradient(180deg, #ff8b9b 0%, #ff4f67 100%);
+  --piece-j: linear-gradient(180deg, #8db4ff 0%, #4573ff 100%);
+  --piece-l: linear-gradient(180deg, #ffc17a 0%, #ff8a2b 100%);
 }
 
 * {
@@ -12,114 +25,357 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: #f4efe6;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(86, 225, 255, 0.18), transparent 30%),
+    radial-gradient(circle at top right, rgba(194, 114, 255, 0.16), transparent 26%),
+    linear-gradient(140deg, var(--bg-0), var(--bg-1) 45%, var(--bg-2));
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
+  pointer-events: none;
 }
 
 .app {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: 28px 18px 36px;
 }
 
-.panel {
-  width: min(100%, 520px);
-  padding: 24px;
-  border: 2px solid #1f1f1f;
-  background: #fffdf8;
-  box-shadow: 8px 8px 0 #d8cfbe;
+.shell {
+  width: min(1120px, 100%);
+  display: grid;
+  gap: 22px;
 }
 
-.header,
-.actions,
-.controls-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.hero {
+  display: grid;
+  gap: 10px;
 }
 
 .eyebrow {
-  margin: 0 0 4px;
+  margin: 0;
+  color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
 }
 
-h1,
-.scoreboard strong,
-.status,
-button {
+.hero h1 {
+  margin: 0;
+  font-family: "Avenir Next Condensed", "Arial Narrow", sans-serif;
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  line-height: 0.92;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.lead {
+  margin: 0;
+  max-width: 60ch;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 1.1fr) minmax(280px, 0.85fr);
+  gap: 22px;
+}
+
+.panel {
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+  border-radius: 28px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+}
+
+.stage-panel {
+  padding: 22px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.panel-head h2,
+.panel-head p {
   margin: 0;
 }
 
-.scoreboard {
-  text-align: right;
+.panel-head p {
+  color: var(--muted);
 }
 
-.status,
-.help {
-  margin-top: 16px;
-  font-size: 0.95rem;
+.status {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #d9ecff;
+  line-height: 1.45;
 }
 
-.meta {
-  margin-top: 12px;
-  font-size: 0.9rem;
+.board-shell {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 18%),
+    linear-gradient(180deg, rgba(14, 31, 52, 0.96), rgba(6, 12, 24, 0.98));
+  box-shadow: inset 0 0 0 1px rgba(124, 248, 207, 0.08);
 }
 
 .board {
-  --cols: 16;
+  --cols: 10;
   display: grid;
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-  gap: 2px;
-  margin-top: 16px;
-  padding: 8px;
-  background: #1f1f1f;
+  gap: 4px;
+  aspect-ratio: 1 / 2;
+}
+
+.cell,
+.preview-cell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(124, 171, 214, 0.08);
+}
+
+.cell::after,
+.preview-cell::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 7px;
+  opacity: 0;
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.filled::after,
+.ghost::after {
+  opacity: 1;
+}
+
+.is-current::after {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.ghost::after {
+  opacity: 0.28;
+}
+
+.piece-i::after {
+  background: var(--piece-i);
+}
+
+.piece-o::after {
+  background: var(--piece-o);
+}
+
+.piece-t::after {
+  background: var(--piece-t);
+}
+
+.piece-s::after {
+  background: var(--piece-s);
+}
+
+.piece-z::after {
+  background: var(--piece-z);
+}
+
+.piece-j::after {
+  background: var(--piece-j);
+}
+
+.piece-l::after {
+  background: var(--piece-l);
+}
+
+.side-panel {
+  padding: 22px;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.card {
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.card-label {
+  margin: 0 0 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+}
+
+.next-board {
+  --cols: 4;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 5px;
+  width: min(100%, 180px);
   aspect-ratio: 1;
 }
 
-.cell {
-  background: #efe7d8;
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
-.snake-head {
-  background: #356b3f;
+.stat {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
-.snake-body {
-  background: #4f9158;
+.stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
 }
 
-.food {
-  background: #b9472c;
+.stat strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .actions,
 .controls {
-  margin-top: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.actions .wide {
+  grid-column: span 2;
 }
 
 .controls {
-  display: grid;
-  gap: 12px;
-  justify-items: center;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.controls .wide {
+  grid-column: span 3;
 }
 
 button {
-  border: 1px solid #1f1f1f;
-  background: #f7f1e7;
-  padding: 10px 14px;
+  border: 0;
+  border-radius: 16px;
+  padding: 13px 14px;
+  color: var(--text);
+  background:
+    linear-gradient(180deg, rgba(126, 235, 216, 0.18), rgba(38, 90, 109, 0.22)),
+    rgba(255, 255, 255, 0.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 10px 24px rgba(0, 0, 0, 0.2);
   font: inherit;
   cursor: pointer;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+button:hover {
+  filter: brightness(1.08);
 }
 
 button:active {
   transform: translateY(1px);
 }
 
-@media (min-width: 720px) {
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  padding: 13px 14px;
+  color: var(--text);
+  text-decoration: none;
+  background:
+    linear-gradient(180deg, rgba(126, 235, 216, 0.18), rgba(38, 90, 109, 0.22)),
+    rgba(255, 255, 255, 0.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+a {
+  color: var(--accent);
+}
+
+.meta,
+.strategy,
+.help {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.strategy {
+  color: #dcecff;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid,
+  .actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .app {
+    padding-inline: 12px;
+  }
+
+  .stage-panel,
+  .side-panel {
+    padding: 16px;
+  }
+
+  .panel-head {
+    flex-direction: column;
+    align-items: start;
+  }
+
   .controls {
-    display: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .controls .wide {
+    grid-column: span 2;
   }
 }

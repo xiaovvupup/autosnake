@@ -1,51 +1,70 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Classic Snake</title>
-    <link rel="stylesheet" href="./src/styles.css" />
+    <title>自动小游戏合集</title>
+    <link rel="stylesheet" href="./src/home.css" />
   </head>
   <body>
     <main class="app">
-      <section class="panel">
-        <header class="header">
-          <div>
-            <p class="eyebrow">Arcade</p>
-            <h1>Snake</h1>
-          </div>
-          <div class="scoreboard">
-            <span>Score</span>
-            <strong id="score">0</strong>
-          </div>
+      <section class="shell">
+        <header class="hero">
+          <p class="eyebrow">Mini Arcade</p>
+          <h1>Auto Arcade</h1>
+          <p>现在已经扩成一个完整的自动小游戏合集：每个页面都能独立运行自动模式，也支持你随时切到手动接管，适合当成轻量 AI 街机展示站来玩。</p>
         </header>
 
-        <div id="status" class="status">Use arrow keys or WASD to start moving.</div>
-        <div id="board" class="board" aria-label="Snake board" role="grid"></div>
+        <section class="grid">
+          <article class="card">
+            <div class="preview preview--tetris"></div>
+            <h2>自动俄罗斯方块</h2>
+            <p>AI 会评估落点、空洞、高度和消行收益，持续自动堆叠，整体节奏也已经放慢到更适合观看。</p>
+            <div class="actions">
+              <a class="button" href="./tetris.html">进入俄罗斯方块</a>
+            </div>
+          </article>
 
-        <div class="actions">
-          <button id="pauseButton" type="button">Pause</button>
-          <button id="restartButton" type="button">Restart</button>
-          <button id="autoPlayButton" type="button">Auto Off</button>
-        </div>
+          <article class="card">
+            <div class="preview preview--snake"></div>
+            <h2>自动贪吃蛇</h2>
+            <p>自动寻路和避险逻辑还在，会优先找安全路径吃果子，同时尽量避免在局部区域原地打转。</p>
+            <div class="actions">
+              <a class="button button--ghost" href="./snake.html">进入贪吃蛇</a>
+            </div>
+          </article>
 
-        <div id="autoStatus" class="meta">Auto: Off</div>
+          <article class="card">
+            <div class="preview preview--2048"></div>
+            <h2>自动 2048</h2>
+            <p>自动评估四个滑动方向，尽量保持大数字留在角落，连续往更高的数值推进。</p>
+            <div class="actions">
+              <a class="button button--ghost" href="./game-2048.html">进入 2048</a>
+            </div>
+          </article>
 
-        <div class="controls" aria-label="Touch controls">
-          <button data-direction="up" type="button">Up</button>
-          <div class="controls-row">
-            <button data-direction="left" type="button">Left</button>
-            <button data-direction="down" type="button">Down</button>
-            <button data-direction="right" type="button">Right</button>
-          </div>
-        </div>
+          <article class="card">
+            <div class="preview preview--brick"></div>
+            <h2>自动打砖块</h2>
+            <p>挡板会自动预测小球落点，持续把球送回砖墙密集区，慢慢清空整面墙。</p>
+            <div class="actions">
+              <a class="button button--ghost" href="./brick-breaker.html">进入打砖块</a>
+            </div>
+          </article>
 
-        <p class="help">
-          Arrow keys/WASD move. Space pauses. Enter restarts after game over.
-        </p>
+          <article class="card">
+            <div class="preview preview--mine"></div>
+            <h2>自动扫雷</h2>
+            <p>先做确定性推理，再在必要时选择风险最低的格子，是一种“会思考”的自动小游戏。</p>
+            <div class="actions">
+              <a class="button button--ghost" href="./minesweeper.html">进入扫雷</a>
+            </div>
+          </article>
+
+        </section>
+
+        <p class="meta">现在可直接访问 <code>/tetris.html</code>、<code>/snake.html</code>、<code>/game-2048.html</code>、<code>/brick-breaker.html</code> 和 <code>/minesweeper.html</code>。</p>
       </section>
     </main>
-
-    <script type="module" src="./src/main.js"></script>
   </body>
 </html>

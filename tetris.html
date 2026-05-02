@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自动俄罗斯方块</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="shell">
+        <header class="hero">
+          <p class="eyebrow">Neon Arcade</p>
+          <h1>Auto Tetris</h1>
+          <p class="lead">自动选位、自动消行，也支持你随时切到手动接管这一局。</p>
+        </header>
+
+        <section class="layout">
+          <section class="panel stage-panel">
+            <div class="panel-head">
+              <div>
+                <p>AI 俄罗斯方块表演赛</p>
+                <h2>自动堆叠中</h2>
+              </div>
+              <div class="stat">
+                <span>当前分数</span>
+                <strong id="score">0</strong>
+              </div>
+            </div>
+
+            <div id="status" class="status">自动驾驶已接管，正在扫描最稳的落点。</div>
+
+            <div class="board-shell">
+              <div id="board" class="board" aria-label="俄罗斯方块棋盘" role="grid"></div>
+            </div>
+          </section>
+
+          <aside class="panel side-panel">
+            <section class="card">
+              <p class="card-label">Next</p>
+              <div id="nextBoard" class="next-board" aria-label="下一个方块预览"></div>
+            </section>
+
+            <section class="stats-grid">
+              <div class="stat">
+                <span>已消行数</span>
+                <strong id="lines">0</strong>
+              </div>
+              <div class="stat">
+                <span>等级</span>
+                <strong id="level">1</strong>
+              </div>
+              <div class="stat">
+                <span>已落块数</span>
+                <strong id="pieces">0</strong>
+              </div>
+              <div class="stat">
+                <span>自动状态</span>
+                <strong id="autoStatus">AI 决策 0 次</strong>
+              </div>
+            </section>
+
+            <div class="actions">
+              <button id="pauseButton" type="button">暂停</button>
+              <button id="restartButton" type="button">重开</button>
+              <button id="autoPlayButton" class="wide" type="button">自动驾驶：开</button>
+            </div>
+
+            <section class="card">
+              <p class="card-label">Strategy</p>
+              <p id="strategy" class="strategy">策略面板：自动模式会优先清行、压低地形、减少空洞。</p>
+            </section>
+
+            <div class="controls" aria-label="手动控制">
+              <button data-action="left" type="button">左移</button>
+              <button data-action="rotate" type="button">旋转</button>
+              <button data-action="right" type="button">右移</button>
+              <button data-action="down" type="button">下落</button>
+              <button data-action="rotate-back" type="button">反转</button>
+              <button data-action="drop" type="button">速降</button>
+            </div>
+
+            <p class="help">键盘：左右移动，向上旋转，Q 反转，向下缓降，空格速降，P 暂停，Enter 重开。</p>
+            <a class="button-link" href="./index.html">返回小游戏首页</a>
+          </aside>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

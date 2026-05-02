@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -9,7 +9,11 @@ if (existsSync(dist)) {
 }
 
 mkdirSync(dist, { recursive: true });
-cpSync(join(root, "index.html"), join(dist, "index.html"));
+for (const entry of readdirSync(root)) {
+  if (entry.endsWith(".html")) {
+    cpSync(join(root, entry), join(dist, entry));
+  }
+}
 cpSync(join(root, "src"), join(dist, "src"), { recursive: true });
 
 console.log("Built static site into dist/");

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自动扫雷</title>
+    <link rel="stylesheet" href="./src/arcade.css" />
+  </head>
+  <body>
+    <main class="arcade-app">
+      <section class="arcade-shell">
+        <header class="arcade-hero">
+          <p class="eyebrow">Logic Arcade</p>
+          <h1>Auto Minesweeper</h1>
+          <p class="lead">自动做数字推理，能确定就安全翻格，推不出来的时候再谨慎试探。</p>
+        </header>
+
+        <section class="arcade-layout">
+          <section class="panel stage-panel">
+            <div class="panel-head">
+              <div>
+                <p>AI 扫雷演算</p>
+                <h2>自动排雷中</h2>
+              </div>
+              <div class="stat">
+                <span>已翻开</span>
+                <strong id="revealed">0</strong>
+              </div>
+            </div>
+
+            <p id="status" class="status">自动扫雷会从中心区域开始开图。</p>
+            <div class="board-shell">
+              <div id="board" class="grid-board board-10" aria-label="扫雷棋盘"></div>
+            </div>
+          </section>
+
+          <aside class="panel side-panel">
+            <section class="stat-grid">
+              <div class="stat">
+                <span>旗子数量</span>
+                <strong id="flags">0/14</strong>
+              </div>
+              <div class="stat">
+                <span>自动状态</span>
+                <strong id="autoStatus">AI 正在做单步推理</strong>
+              </div>
+            </section>
+
+            <div class="actions">
+              <button id="pauseButton" type="button">暂停</button>
+              <button id="restartButton" type="button">重开</button>
+              <button id="autoButton" class="wide" type="button">自动排雷：开</button>
+            </div>
+
+            <section class="card">
+              <p class="card-label">Strategy</p>
+              <p id="strategy" class="strategy">策略：先做确定性推理，推不出来时再挑风险最低的格子试探。</p>
+            </section>
+
+            <section class="card">
+              <p class="card-label">Manual</p>
+              <p class="help">想自己玩：先关闭“自动排雷”，左键翻开格子，右键给可疑格插旗；空格暂停，点击“重开”重新开局。</p>
+            </section>
+
+            <a class="button-link" href="./index.html">返回小游戏首页</a>
+          </aside>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main-minesweeper.js"></script>
+  </body>
+</html>
